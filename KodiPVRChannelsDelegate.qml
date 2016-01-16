@@ -13,6 +13,8 @@ Item {
     Image {
         id: idImage
         source: thumbnail
+        sourceSize.width: 60
+        sourceSize.height: 60
         width: 60
         anchors.left: parent.left
         anchors.top: parent.top
