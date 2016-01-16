@@ -2,10 +2,15 @@
 #include "kodipvrchannel.h"
 
 #include <QAbstractListModel>
+#include <QDebug>
 
 KodiPVRChannelModel::KodiPVRChannelModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    updateRoles.clear();
+    minIndex = QModelIndex();
+    maxIndex = QModelIndex();
+    qDebug() << "QModelIndex().isValid" << minIndex.isValid();
 }
 
 void KodiPVRChannelModel::addChannel(const KodiPVRChannel &kodiPVRChannel)
@@ -72,19 +77,71 @@ QHash<int, QByteArray> KodiPVRChannelModel::roleNames() const
     return roles;
 }
 
-bool KodiPVRChannelModel::setData(const QModelIndex &index, const KodiPVRChannel &kodiPVRChannel)
+bool KodiPVRChannelModel::setData(const QModelIndex &index, const KodiPVRChannel &kodiPVRChannel, const bool update)
 {
     if (index.isValid())
     {
-        m_kodiPVRChannels[index.row()].setTitle(kodiPVRChannel.title());
-        m_kodiPVRChannels[index.row()].setEpisodename(kodiPVRChannel.episodename());
-        m_kodiPVRChannels[index.row()].setTitleNext(kodiPVRChannel.titleNext());
-        m_kodiPVRChannels[index.row()].setEpisodenameNext(kodiPVRChannel.episodenameNext());
-        m_kodiPVRChannels[index.row()].setProgresspercentage(kodiPVRChannel.progresspercentage());
-        m_kodiPVRChannels[index.row()].setStarttime(kodiPVRChannel.starttime());
-        m_kodiPVRChannels[index.row()].setEndtime(kodiPVRChannel.endtime());
-        m_kodiPVRChannels[index.row()].setLastplayed(kodiPVRChannel.lastplayed());
-        emit dataChanged(index, index);
+        if (m_kodiPVRChannels[index.row()].title() != kodiPVRChannel.title())
+        {
+            m_kodiPVRChannels[index.row()].setTitle(kodiPVRChannel.title());
+            if (!updateRoles.contains(TitleRole))
+                updateRoles.append(TitleRole);
+        }
+        if (m_kodiPVRChannels[index.row()].episodename() != kodiPVRChannel.episodename())
+        {
+            m_kodiPVRChannels[index.row()].setEpisodename(kodiPVRChannel.episodename());
+            if (!updateRoles.contains(EpisodeNameRole))
+                updateRoles.append(EpisodeNameRole);
+        }
+        if (m_kodiPVRChannels[index.row()].titleNext() != kodiPVRChannel.titleNext())
+        {
+            m_kodiPVRChannels[index.row()].setTitleNext(kodiPVRChannel.titleNext());
+            if (!updateRoles.contains(TitleNextRole))
+                updateRoles.append(TitleNextRole);
+        }
+        if (m_kodiPVRChannels[index.row()].episodenameNext() != kodiPVRChannel.episodenameNext())
+        {
+            m_kodiPVRChannels[index.row()].setEpisodenameNext(kodiPVRChannel.episodenameNext());
+            if (!updateRoles.contains(EpisodeNameNextRole))
+                updateRoles.append(EpisodeNameNextRole);
+        }
+        if (m_kodiPVRChannels[index.row()].progresspercentage() != kodiPVRChannel.progresspercentage())
+        {
+            m_kodiPVRChannels[index.row()].setProgresspercentage(kodiPVRChannel.progresspercentage());
+            if (!updateRoles.contains(ProgressPercentageRole))
+                updateRoles.append(ProgressPercentageRole);
+        }
+        if (m_kodiPVRChannels[index.row()].starttime() != kodiPVRChannel.starttime())
+        {
+            m_kodiPVRChannels[index.row()].setStarttime(kodiPVRChannel.starttime());
+            if (!updateRoles.contains(StartTimeRole))
+                updateRoles.append(StartTimeRole);
+        }
+        if (m_kodiPVRChannels[index.row()].endtime() != kodiPVRChannel.endtime())
+        {
+            m_kodiPVRChannels[index.row()].setEndtime(kodiPVRChannel.endtime());
+            if (!updateRoles.contains(EndTimeRole))
+                updateRoles.append(EndTimeRole);
+        }
+        if (m_kodiPVRChannels[index.row()].lastplayed() != kodiPVRChannel.lastplayed())
+        {
+            m_kodiPVRChannels[index.row()].setLastplayed(kodiPVRChannel.lastplayed());
+            if (!updateRoles.contains(LastPlayedRole))
+                updateRoles.append(LastPlayedRole);
+        }
+
+        if (index.row() < minIndex.row() || !minIndex.isValid())
+            minIndex = index;
+        if (index.row() > maxIndex.row() || !maxIndex.isValid())
+            maxIndex = index;
+
+        if (update)
+        {
+            emit dataChanged(minIndex, maxIndex);
+            updateRoles.clear();
+            minIndex = QModelIndex();
+            maxIndex = QModelIndex();
+        }
         return true;
     }
     return false;

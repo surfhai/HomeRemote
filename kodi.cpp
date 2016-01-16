@@ -145,7 +145,10 @@ void Kodi::onQueryFinished(QNetworkReply *re)
             if (kodiPVRChannelModel->hasIndex(i, 0))
             {
                 QModelIndex index = kodiPVRChannelModel->index(i, 0, QModelIndex());
-                kodiPVRChannelModel->setData(index, kodiPVRChannel);
+                if (i == channels.count() - 1)
+                    kodiPVRChannelModel->setData(index, kodiPVRChannel, true);
+                else
+                    kodiPVRChannelModel->setData(index, kodiPVRChannel, false);
             }
             else
             {

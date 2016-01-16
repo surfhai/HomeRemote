@@ -31,13 +31,16 @@ public:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     void addChannel(const KodiPVRChannel &kodiPVRChannel);
     //bool setData(const QModelIndex &index, const QVariant &value, int role);
-    bool setData(const QModelIndex &index, const KodiPVRChannel &kodiPVRChannel);
+    bool setData(const QModelIndex &index, const KodiPVRChannel &kodiPVRChannel, const bool update);
 
 protected:
     QHash <int, QByteArray> roleNames() const;
 
 private:
     QList<KodiPVRChannel> m_kodiPVRChannels;
+    QVector<int> updateRoles;
+    QModelIndex minIndex;
+    QModelIndex maxIndex;
 
 public slots:
 };
