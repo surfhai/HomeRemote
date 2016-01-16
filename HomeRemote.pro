@@ -29,7 +29,6 @@ HEADERS += \
     globals.h \
     homematic.h \
     hmdevice.h \
-    getpage.h \
     gethtml.h
 
 DISTFILES += \
