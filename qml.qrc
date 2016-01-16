@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Clock.qml</file>
+        <file>Navigation.qml</file>
+        <file>Images/NaviSelect.svg</file>
+        <file>Images/NaviArrowDown.svg</file>
+        <file>Images/NaviArrowLeft.svg</file>
+        <file>Images/NaviArrowRight.svg</file>
+        <file>Images/NaviArrowUp.svg</file>
+        <file>Images/go-home.svg</file>
+        <file>Images/go-back.svg</file>
+        <file>Images/NaviOSD.svg</file>
+        <file>KodiPVRChannelsDelegate.qml</file>
+        <file>ScrollBar.qml</file>
+    </qresource>
+</RCC>
