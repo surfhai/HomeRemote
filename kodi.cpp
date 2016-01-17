@@ -55,7 +55,7 @@ void Kodi::init()
     QTimer *timerPVRChannels = new QTimer(this);
     connect (timerPVRChannels, &QTimer::timeout,
              this, &Kodi::getPVRChannels);
-    timerPVRChannels->start(5000);
+    timerPVRChannels->start(60000);
     jsonID = 0;
     getPVRChannels();
 }
@@ -105,11 +105,18 @@ void Kodi::onQueryFinished(QNetworkReply *re)
             QString channel = channelsObj["channel"].toString();
             int channelid = channelsObj["channelid"].toInt();
             QString label = fixEncoding(channelsObj["label"].toString());
-            QString title = fixEncoding(broadcastnow["title"].toString());
-            QString episodename = fixEncoding(broadcastnow["episodename"].toString());
-            QString titleNext = fixEncoding(broadcastnext["title"].toString());
-            QString episodenameNext = fixEncoding(broadcastnext["episodename"].toString());
+            QString title = fixEncoding(broadcastnow["title"].toString().left(50));
+            QString episodename = fixEncoding(broadcastnow["episodename"].toString().left(50));
+            qDebug() << "Textlänge:" << title.count() + episodename.count();
+            QString titleNext = fixEncoding(broadcastnext["title"].toString().left(50));
+            QString episodenameNext = fixEncoding(broadcastnext["episodename"].toString().left(50));
             double progresspercentage = broadcastnow["progresspercentage"].toDouble();
+            if (progresspercentage < 0.1)
+                progresspercentage = 0.001;
+            else if (progresspercentage > 100.0)
+                progresspercentage = 1.0;
+            else
+                progresspercentage = progresspercentage / 100.0;
             QDateTime starttime = QDateTime::fromString(broadcastnow["starttime"].toString(),
                                                         "yyyy-MM-dd HH:mm:ss");
             QDateTime endtime = QDateTime::fromString(broadcastnow["endtime"].toString(),

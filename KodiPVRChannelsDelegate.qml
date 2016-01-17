@@ -98,6 +98,7 @@ Item {
     Rectangle {
         id: idProgressOutline
         anchors.top: idEpisodeName.bottom
+        //anchors.top: idTitle.bottom
         anchors.left: idLabel.left
         anchors.right: parent.right
         height: 5
@@ -111,7 +112,7 @@ Item {
             anchors.left: parent.left
             anchors.topMargin: idProgressOutline.border.width
             anchors.leftMargin: idProgressOutline.border.width
-            width: ((parent.width * progressPercentage / 100.0) < parent.width) ? (parent.width * progressPercentage / 100.0 - idProgressOutline.border.width * 2) : parent.width - idProgressOutline.border.width * 2
+            width: parent.width * progressPercentage
             height: parent.height - idProgressOutline.border.width * 2
             color: "#3DAEE9"
         }
